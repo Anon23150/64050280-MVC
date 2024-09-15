@@ -30,49 +30,53 @@ function processCow(code) {
     const chance = Math.random(); // สุ่มโอกาส
     let message = `รีดนมสำเร็จ: ${milkProduced.toFixed(2)} ลิตร`;
 
-    if (cow.udders === 4 && chance < 0.50) { // 5% โอกาสที่เต้าจะลดลง
-        cow.udders = 3; // ลดเต้านมเหลือ 3
+    if (cow.udders === 4 && chance < 0.05) { // 5% โอกาสที่เต้าจะลดลง
+        cow.udders = 3; 
         message += ' (โชคร้ายจังวัวตัวนี้เต้าลดลง 1 เต้า)';
     }
     
     // อัปเดตปริมาณน้ำนมรวมทั้งหมด
     animalsData.total_liters_of_milk += milkProduced;
 
-    // อัปเดตข้อมูลในไฟล์
-    updateAnimals(animalsData); // ส่งข้อมูลทั้งหมดกลับไปอัปเดตไฟล์
+    // อัปเดตข้อมูลวัวเฉพาะตัวนี้ใน array
+    updateSingleCow(cow, animalsData);
 
     return { success: true, message: message };
 }
 
+
 // ฟังก์ชันเพื่ออัปเดตข้อมูล (รวมถึง total_liters_of_milk)
 function updateAnimals(animalsData) {
+    console.log('update animal');
+    console.log(animalsData.animals);
     fs.writeFileSync(dataFile, JSON.stringify(animalsData, null, 2));
 }
 
 // ฟังก์ชันเพิ่มเต้านม
 function increaseUdder(code) {
     const animalsData = getAnimalsData();
-    const cow = findAnimalById(code); // เรียกใช้ findAnimalById เพื่อค้นหาวัว
+    const index = animalsData.animals.findIndex(animal => animal.id === code); // หาตำแหน่งของวัวใน array
 
-    if (!cow || cow.type !== 'cow' || cow.udders !== 3) {
+    if (index === -1 || animalsData.animals[index].type !== 'cow' || animalsData.animals[index].udders !== 3) {
         return { success: false, message: 'วัวตัวนี้ไม่สามารถเพิ่มเต้าได้ (ต้องมี 3 เต้าเท่านั้น)' };
     }
 
     const chance = Math.random();
-    if (chance < 0.2) { // 20% โอกาส
-        cow.udders = 4; // เพิ่มเต้าเป็น 4
-        updateAnimals(animalsData); // อัปเดตข้อมูลในไฟล์
+    if (chance < 0.2) { 
+        animalsData.animals[index].udders = 4; 
+        updateAnimals(animalsData); 
         return { success: true, message: 'โชคดีจัง! วัวตัวนี้กลับมามี 4 เต้าแล้ว' };
     } else {
         return { success: false, message: 'เพิ่มเต้าไม่สำเร็จ' };
     }
 }
 
+
 function updateSingleCow(cow, animalsData) {
-    const existingCow = findAnimalById(cow.id); // ค้นหาวัวด้วย findAnimalById
+    const index = animalsData.animals.findIndex(animal => animal.id === cow.id); // หาตำแหน่งวัวใน array
     
-    if (existingCow) {
-        Object.assign(existingCow, cow); // อัปเดตข้อมูลใน existingCow ด้วย cow ใหม่
+    if (index !== -1) {
+        animalsData.animals[index] = cow; // อัปเดตข้อมูลในตำแหน่งนั้น
         updateAnimals(animalsData); // อัปเดตข้อมูลทั้งหมดในไฟล์ JSON
     }
 }

@@ -1,5 +1,5 @@
 {
-  "total_liters_of_milk": 122,
+  "total_liters_of_milk": 41,
   "animals": [
     {
       "type": "cow",
@@ -7,7 +7,7 @@
       "age_month": 5,
       "age_year": 3,
       "udders": 3,
-      "liters_of_milk": 0
+      "liters_of_milk": 16
     },
     {
       "type": "cow",
@@ -111,7 +111,7 @@
       "age_month": 3,
       "age_year": 2,
       "udders": 4,
-      "liters_of_milk": 0
+      "liters_of_milk": 15
     },
     {
       "type": "cow",
