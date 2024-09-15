@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter Code</title>
+</head>
+<body>
+
+    <div style="margin-top: 20px;">
+        <h2>น้ำนมทั้งหมดที่รีดได้:</h2>
+        <div id="totalMilk" style="margin-top: 20px;"></div>
+    </div>
+    <h1>กรอกรหัสวัวหรือแพะ</h1>
+    <form id="codeForm">
+        <label for="code">รหัส: </label>
+        <input type="text" id="code" name="code" required>
+        <button type="submit">Submit</button>
+    </form>
+
+    <!-- แสดงผลข้อความจากเซิร์ฟเวอร์ -->
+    <div id="result" style="margin-top: 20px;"></div>
+
+    <!-- ปุ่มต่าง ๆ ที่จะถูกแสดงหลังจากได้รับผลลัพธ์ -->
+    <div id="buttons" style="margin-top: 20px; display: none;">
+        <button id="milkButton" style="display: none;">รีดนม</button>
+        <button id="changeButton" style="display: none;">เปลี่ยนตัว</button>
+        <button id="sendBackButton" style="display: none;">ไล่กลับภูเขา</button>
+    </div>
+
+    <script>
+        let currentCode = null;  // เก็บรหัสปัจจุบันเพื่อใช้ในปุ่มรีดนม
+
+        // ตรวจสอบ input 
+        function validateCode(codeInput) {
+            const codePattern = /^[1-9][0-9]{7}$/;
+
+            if (!codePattern.test(codeInput)) {
+                alert("รหัสต้องเป็นตัวเลข 8 หลัก และตัวแรกต้องไม่เป็น 0");
+                return false;
+            }
+            return true;
+        }
+
+        // ฟังก์ชันสำหรับการส่งข้อมูลไปยังเซิร์ฟเวอร์ด้วย fetch
+        async function submitCode(code) {
+            try {
+                const response = await fetch('/submit-code', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ code }) // ส่งรหัสไปในรูปแบบ JSON
+                });
+
+                if (!response.ok) {
+                    throw new Error('เกิดข้อผิดพลาดในการติดต่อเซิร์ฟเวอร์');
+                }
+
+                const result = await response.json(); // รับผลลัพธ์จากเซิร์ฟเวอร์
+                displayResult(result); // เรียกใช้ฟังก์ชันแสดงผล
+                currentCode = code;  // เก็บรหัสสำหรับการรีดนม
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        // ฟังก์ชันสำหรับรีดนม
+        async function milkCow() {
+            try {
+                const response = await fetch('/milk-cow', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ code: currentCode }) // ส่งรหัสวัวไปคำนวณ
+                });
+
+                if (!response.ok) {
+                    throw new Error('เกิดข้อผิดพลาดในการติดต่อเซิร์ฟเวอร์');
+                }
+
+                const result = await response.json(); // รับผลลัพธ์จากเซิร์ฟเวอร์
+                displayMessage(result.message); // แสดงผลลัพธ์จากการรีดนม
+                showTotalMilk(); // อัปเดตข้อมูลน้ำนมทั้งหมดหลังจากรีดนม
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        // ฟังก์ชันแสดงผลลัพธ์จากเซิร์ฟเวอร์และควบคุมปุ่ม
+        function displayResult(result) {
+            const resultDiv = document.getElementById('result');
+            const buttonsDiv = document.getElementById('buttons');
+            const milkButton = document.getElementById('milkButton');
+            const changeButton = document.getElementById('changeButton');
+            const sendBackButton = document.getElementById('sendBackButton');
+
+            // แสดงข้อความจากเซิร์ฟเวอร์
+            resultDiv.innerHTML = `<p>${result.message}</p>`;
+            
+            // ซ่อนปุ่มทั้งหมดก่อน
+            clearButtons();
+            buttonsDiv.style.display = 'block'; // แสดงกล่องปุ่ม
+
+            // แสดงปุ่มตามประเภทของสัตว์และสถานะ
+            if (result.type === 'cow') {
+                if (result.udders === 4) {
+                    milkButton.style.display = 'block';
+                    milkButton.addEventListener('click', milkCow); // เพิ่ม event listener สำหรับรีดนม
+                } else if (result.udders === 3) {
+                    changeButton.style.display = 'block';
+                    changeButton.addEventListener('click', tryIncreaseUdder); // เพิ่ม event listener สำหรับเปลี่ยนตัว
+                }
+            } else if (result.type === 'goat') {
+                sendBackButton.style.display = 'block';
+                sendBackButton.addEventListener('click', clearScreen); // เคลียร์หน้าจอเมื่อไล่กลับภูเขา
+            }
+        }
+
+        // ฟังก์ชันแสดงน้ำนมทั้งหมด
+        async function showTotalMilk() {
+            try {
+                const response = await fetch('/total');
+                if (!response.ok) {
+                    throw new Error('เกิดข้อผิดพลาดในการติดต่อเซิร์ฟเวอร์');
+                }
+
+                const result = await response.json();
+                const totalMilkDiv = document.getElementById('totalMilk');
+                totalMilkDiv.innerHTML = `<p>${result.totalMilk.toFixed(2)} ลิตร</p>`;
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        // ฟังก์ชันแสดงข้อความและเพิ่มปุ่ม "ย้อนกลับ"
+        function displayMessage(message) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `<p>${message}</p>
+                                   <button id="backButton">ย้อนกลับ</button>`;
+            
+            // ซ่อนปุ่มทั้งหมดก่อน
+            clearButtons();
+
+            // เพิ่ม Event Listener ให้ปุ่ม "ย้อนกลับ"
+            document.getElementById('backButton').addEventListener('click', clearScreen);
+        }
+
+        // ฟังก์ชันเคลียร์หน้าจอเมื่อกดปุ่มเปลี่ยนตัวและโอกาส 20% ที่จะเพิ่มเต้า
+        async function tryIncreaseUdder() {
+            try {
+                const response = await fetch('/increase-udder', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ code: currentCode }) // ส่งรหัสวัวไปเพื่อประมวลผลโอกาสเพิ่มเต้า
+                });
+
+                if (!response.ok) {
+                    throw new Error('เกิดข้อผิดพลาดในการติดต่อเซิร์ฟเวอร์');
+                }
+
+                const result = await response.json(); // รับผลลัพธ์จากเซิร์ฟเวอร์
+                displayMessage(result.message); // แสดงผลลัพธ์ว่ามีการเพิ่มเต้าหรือไม่
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        // ฟังก์ชันเคลียร์ปุ่ม
+        function clearButtons() {
+            const milkButton = document.getElementById('milkButton');
+            const changeButton = document.getElementById('changeButton');
+            const sendBackButton = document.getElementById('sendBackButton');
+
+            milkButton.style.display = 'none';
+            changeButton.style.display = 'none';
+            sendBackButton.style.display = 'none';
+        }
+
+        // ฟังก์ชันเคลียร์หน้าจอ
+        function clearScreen() {
+            const resultDiv = document.getElementById('result');
+            const buttonsDiv = document.getElementById('buttons');
+            const codeInput = document.getElementById('code');
+
+            // ลบข้อความและซ่อนปุ่มทั้งหมด
+            resultDiv.innerHTML = '';
+            buttonsDiv.style.display = 'none';
+            clearButtons();
+
+            // ล้างค่าฟิลด์ input
+            codeInput.value = '';
+        }
+
+        // เรียกแสดงน้ำนมทั้งหมดตอนโหลดหน้าเว็บ
+        showTotalMilk();
+
+        // Event listener สำหรับการส่งฟอร์ม
+        document.getElementById('codeForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // ป้องกันการ reload หน้า
+
+            const code = document.getElementById('code').value;
+
+            if (validateCode(code)) {
+                submitCode(code); // ส่งรหัสไปยังฟังก์ชัน fetch
+            }
+        });
+    </script>
+</body>
+</html>
