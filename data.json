@@ -1,13 +1,13 @@
 {
-  "total_liters_of_milk": 54,
+  "total_liters_of_milk": 93,
   "animals": [
     {
       "type": "cow",
       "id": 11111111,
       "age_month": 5,
       "age_year": 3,
-      "udders": 4,
-      "liters_of_milk": 24
+      "udders": 3,
+      "liters_of_milk": 32
     },
     {
       "type": "cow",
@@ -30,7 +30,7 @@
       "id": 44444444,
       "age_month": 6,
       "age_year": 3,
-      "udders": 3,
+      "udders": 4,
       "liters_of_milk": 0
     },
     {
@@ -38,8 +38,8 @@
       "id": 55555555,
       "age_month": 5,
       "age_year": 3,
-      "udders": 3,
-      "liters_of_milk": 0
+      "udders": 4,
+      "liters_of_milk": 16
     },
     {
       "type": "cow",
@@ -111,7 +111,7 @@
       "age_month": 3,
       "age_year": 2,
       "udders": 4,
-      "liters_of_milk": 20
+      "liters_of_milk": 35
     },
     {
       "type": "cow",
