@@ -50,6 +50,7 @@ function increaseUdder(req, res) {
     return res.json(result); 
 }
 
+// ส่งแพะไปภูเขาแบบปลอมๆ
 function sendGoatBack(req, res) {
     const code = parseInt(req.body.code, 10);
     const animal = model.findAnimalById(code);

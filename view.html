@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Enter Code</title>
     <style>
-      /* พื้นหลังแบบ Gradient */
+
       body {
         font-family: "Helvetica", sans-serif;
         background: linear-gradient(135deg, #74ebd5 0%, #9face6 100%);
@@ -18,7 +18,7 @@
         min-height: 100vh;
       }
 
-      /* กล่องคอนเทนต์ตรงกลาง */
+
       .container {
         background-color: #ffffff;
         padding: 40px;
@@ -29,14 +29,14 @@
         text-align: center;
       }
 
-      /* การตกแต่งหัวข้อ */
+
       h1,
       h2 {
         color: #34495e;
         margin-bottom: 20px;
       }
 
-      /* การตกแต่งผลลัพธ์ */
+
       #totalMilk,
       #result {
         background-color: #f1f1f1;
@@ -48,7 +48,7 @@
         box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
       }
 
-      /* การตกแต่ง input */
+ 
       input[type="text"] {
         padding: 15px;
         width: 100%;
@@ -59,7 +59,7 @@
         box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
       }
 
-      /* การตกแต่งปุ่ม */
+
       button {
         background-color: #3498db;
         color: white;
@@ -76,7 +76,7 @@
         background-color: #2980b9;
       }
 
-      /* ปุ่มย่อย */
+
       #buttons {
         display: flex;
         justify-content: space-between;
@@ -88,7 +88,7 @@
         flex: 1;
       }
 
-      /* การตกแต่งปุ่มย้อนกลับ */
+
       #backButton {
         background-color: #e74c3c;
       }
@@ -97,7 +97,7 @@
         background-color: #c0392b;
       }
 
-      /* การตอบสนองหน้าจอเล็ก */
+
       @media (max-width: 600px) {
         .container {
           padding: 20px;
@@ -130,13 +130,12 @@
       </form>
 
       <!-- แสดงผลจำนวนน้ำนมทั้งหมด -->
-
       <div id="totalMilk"></div>
 
       <!-- แสดงผลข้อความจากเซิร์ฟเวอร์ -->
       <div id="result"></div>
 
-      <!-- ปุ่มต่าง ๆ ที่จะถูกแสดงหลังจากได้รับผลลัพธ์ -->
+      <!-- ปุ่มต่าง  -->
       <div id="buttons" style="display: none">
         <button id="milkButton" style="display: none">รีดนม</button>
         <button id="changeButton" style="display: none">เปลี่ยนตัว</button>
@@ -224,7 +223,6 @@
 
       // แสดงผลค่าที่ได้จาก back
       function displayResult(result) {
-        console.log(result);
         const resultDiv = document.getElementById("result");
         const buttonsDiv = document.getElementById("buttons");
         const milkButton = document.getElementById("milkButton");
@@ -245,7 +243,7 @@
           }
         } else if (result.type === "goat") {
           sendBackButton.style.display = "block";
-          sendBackButton.addEventListener("click", sendBackToMountain); // เรียกใช้ฟังก์ชันส่งแพะกลับภูเขา
+          sendBackButton.addEventListener("click", sendBackToMountain); 
         }
       }
 
@@ -264,7 +262,7 @@
             throw new Error("เกิดข้อผิดพลาดในการติดต่อเซิร์ฟเวอร์");
 
           const result = await response.json();
-          displayMessage(result.message); // แสดงผลลัพธ์ที่ได้จากเซิร์ฟเวอร์
+          displayMessage(result.message); 
         } catch (error) {
           alert(error.message);
         }

@@ -4,7 +4,7 @@ const app = express();
 const controller = require('./controller');
 
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json()); // รองรับ JSON
+app.use(bodyParser.json()); 
 
 // แสดงฟอร์ม
 app.get('/', (req, res) => {

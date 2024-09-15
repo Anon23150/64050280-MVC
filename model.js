@@ -2,17 +2,19 @@ const fs = require("fs");
 const path = require("path");
 const dataFile = path.join(__dirname, "data.json");
 
+//อ่านไฟล์ data.json
 function getAnimalsData() {
   const data = fs.readFileSync(dataFile);
   return JSON.parse(data);
 }
 
+//อ่านไฟล์ หาวัวทีละตัว
 function findAnimalById(id) {
   const animalsData = getAnimalsData();
   return animalsData.animals.find((animal) => animal.id == id);
 }
 
-// รีดนมวัว
+// รีดนมวัว และสุ่มลดเต้า
 function processCow(code) {
   const animalsData = getAnimalsData();
   const cow = findAnimalById(code);
