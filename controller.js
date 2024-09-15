@@ -1,6 +1,6 @@
 const model = require('./model');
 
-// ฟังก์ชันตรวจสอบรหัสและจัดการรีดนม
+// ตรวจชนิดของสัตว์แล้วก้ปั้น respons
 function submitCode(req, res) {
     const code = parseInt(req.body.code, 10);
     const animal = model.findAnimalById(code);
@@ -43,10 +43,11 @@ function milkCow(req, res) {
     return res.json(result); 
 }
 
+// โอกาสที่เต้าจะเพิ่ม 
 function increaseUdder(req, res) {
     const code = parseInt(req.body.code, 10);
-    const result = model.increaseUdder(code); // เรียกฟังก์ชัน increaseUdder จาก model
-    return res.json(result); // ส่งผลลัพธ์กลับไปยัง client
+    const result = model.increaseUdder(code); 
+    return res.json(result); 
 }
 
 function sendGoatBack(req, res) {
@@ -57,11 +58,10 @@ function sendGoatBack(req, res) {
         return res.json({ success: false, message: 'ไม่พบแพะในระบบ' });
     }
 
-    // ตอบกลับว่าไล่แพะกลับสำเร็จ
     return res.json({ success: true, message: 'ไล่แพะกลับภูเขาสำเร็จ!' });
 }
 
-
+// ดึงค่านมรวมทั้งหมด
 const  getTotalMilk = (req, res) => {
     const totalMilk = model.getTotalMilk();
     return res.json({ totalMilk });

@@ -11,19 +11,20 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/view.html');
 });
 
-// ส่งรหัสเพื่อตรวจสอบ
+// ส่งรหัสไปหาสัตว์ในฟาร์ม
 app.post('/submit-code', controller.submitCode);
 
-// Route สำหรับแสดงน้ำนมทั้งหมด
+// ดึงค่านมวัวทั้งหมด
 app.get('/total', controller.getTotalMilk);
 
-// Route สำหรับการรีดนม
+// สั่งรีดนม
 app.post('/milk-cow', controller.milkCow);
 
-// Route สำหรับการเพิ่มเต้า
+// เรียกฟังค์ชั่นที่ทำให้วัวมีโอกาสเพิ่มเต้า
 app.post('/increase-udder', controller.increaseUdder);
 
-app.post('/send-goat-back', controller.sendGoatBack);
+// เรียกส่งแพะกลับ
+app.post('/send-back-goat', controller.sendGoatBack);
 
 app.listen(3000, () => {
     console.log('Server is running on port 3000');
